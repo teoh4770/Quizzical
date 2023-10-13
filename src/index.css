@@ -1,0 +1,170 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600;700&display=swap");
+
+:root {
+  --clr-primary-200: #d6dbf5;
+  --clr-primary-300: rgba(77, 91, 158, 1);
+  --clr-primary-400: rgba(41, 50, 100, 1);
+  --clr-neutral: rgba(245, 247, 251, 1);
+}
+
+/* css reset - Josh Comeau */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+body {
+  line-height: 1.5;
+  font-family: "Karla", sans-serif;
+  /* overflow: hidden; */
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.button {
+  /* Spacing */
+  padding: 0.6875rem 1.375rem;
+  /* Colors */
+  background-color: var(--clr-primary-300);
+  color: white;
+  /* Others */
+  border: transparent;
+  border-radius: 15px;
+}
+
+.button--large {
+  padding: 1rem 3rem;
+}
+
+.block {
+  width: 250px;
+  height: 250px;
+  border-radius: 53% 47% 58% 42% / 29% 61% 39% 71%;
+  position: absolute;
+}
+
+.block--one {
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  background-color: #FFFAD1;
+}
+
+.block--two {
+  bottom: 0;
+  left: 0;
+  transform: translate(-50%, 50%);
+  background-color: pink;
+}
+
+.start-page {
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  /* Spacing */
+  min-height: 99svh;
+}
+
+.start-page__title {
+  margin-bottom: 0.4375rem;
+}
+
+.start-page__subtitle {
+  margin-bottom: 1.8125rem;
+}
+
+.question-page {
+  display: flex;
+  flex-direction: column;
+  padding-block: 2.5rem;
+  padding-inline: 4.6875rem;
+}
+
+.question-container {
+  color: var(--clr-primary-400);
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--clr-primary-200);
+}
+
+.question {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.answer-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.answer-options > button {
+  /* Layout */
+  min-width: 4.0625rem;
+  /* Spacing */
+  padding: 2px 12px;
+  /* Typography */
+  text-align: center;
+  /* Colors */
+  background-color: transparent;
+  /* Others */
+  border: 1px solid var(--clr-primary-300);
+  border-radius: 8px;
+}
+
+
+
+/* .answer-options > button + button {
+  margin-left: 13px;
+} */
+
+.answer-options > button.selected {
+  background-color: var(--clr-primary-200);
+  border: 1px solid transparent;
+}
+
+.question-page > .button {
+  margin-block-start: 1.25rem;
+  align-self: center;
+}
