@@ -1,30 +1,59 @@
-import React from "react"
+export default function Question(props) {
+  /*
+   props: 
+   1. clickHandler
+   2. id
+   3. questionObject: correctAnswer, options, question, userChoice
+   4. answerChecked 
+   */
 
-/* eslint-disable react/prop-types */
-export default function Question({id, question, options, handleClick}) {
-  const [selectedButton, getSelectedButton] = React.useState("");
+  const {question, options, userChoice, correctAnswer} = props.questionObject;
 
-  const optionsComponents = options.map((option, index) => {
-    const isSelected = selectedButton === option;
+  // Function
+  const classNames = function(classes) {
+    return Object.entries(classes)
+      .filter(([key, value]) => value)
+      .map(([key, value]) => key)
+      .join(' ');
+  }
+
+  // Components
+  const Options = options.map((option, key) => {
+    // set classes for each option state
+    // 1. selected
+    // 2. correctOption
+    // 3. ? (if user select the wrong thing)
+
+    const classes = {
+      'option': true,
+      'selected': userChoice === option,
+      'correct': props.answerChecked && (option === correctAnswer),
+      'incorrect': props.answerChecked && (userChoice === option) && (option !== correctAnswer)
+    }
+
+    const buttonClassNames = classNames(classes);
+
     return (
-      <button 
-        className={isSelected ? "selected" : ""}
-        onClick={() => {
-          getSelectedButton(option)
-          handleClick(id, option)
-        }}
-        key={index}
-        id={id}
-        value={option}>
-          {option}
+      <button
+        disabled={props.answerChecked}
+        className={buttonClassNames}
+        key={key}
+        onClick={
+          () => props.clickHandler(props.id, option)
+        }
+      >
+        {option}
       </button>
-  )})
+    )
+  });
 
+
+  
   return (
     <section className="question-container">
       <p className="question">{question}</p>
-      <div className="answer-options">
-        {optionsComponents}
+      <div className="options">
+        {Options}
       </div>
     </section>
   )

@@ -1,72 +1,105 @@
 /* eslint-disable react/prop-types */
 import Question from "./Question"
+import Button from "./Button";
 import React from "react";
 
 export default function QuestionPage(props) {
-  // functions
-  // const shuffleArray = (array) => {
-  //   return array.sort(() => Math.random() - 0.5);
-  // };
-  const handleClick = (id, newAnswer) => {
-    setUserAnswers(prevState => {
-      return prevState.map((oldAnswer, index) => {
-          if (index === id) {
-            return newAnswer;
-          }
-          return oldAnswer;
-      });
-    });
-  }
+  /*
+   Props: 
+   1. questions: an array of questionObject
+   2. restartQuiz
+   3. setQuestions
+   */
+  const {questions, setQuestions, restartQuiz} = props;
+  
+  // States
+  const [answerChecked, setAnswerChecked] = React.useState(false);
+  const [totalResult, setTotalResult] = React.useState(0);
 
-  const checkAnswer = (userAnswers, correctAnswers) => {
-    setAnswerChecked(true);
-    
-    let score = 0;
-    userAnswers.forEach((userAnswer, index) => {
-      let userIsCorrect = userAnswer === correctAnswers[index];
+  // Functions
+  const getTotalResult = function(questionArray) {  
+    let result = 0;
 
-      if (userIsCorrect) {
-        score++;
+    questionArray.forEach(question => {
+      if (question.userChoice === question.correctAnswer) {
+        result += 1;
       }
-    });
+    })
 
-    return score;
+    setTotalResult(result);
+    setAnswerChecked(true);
   }
 
+  const restartGame = function() {
+    // reinitialize the game
+    setTotalResult(0);
+    setAnswerChecked(false);
+    restartQuiz();
+  }
 
-  const [answerChecked, setAnswerChecked] = React.useState(false)
-  const answers = props.questions.map(question => question.correct_answer);
-  const [userAnswers, setUserAnswers] = React.useState(answers.map(answer => ""))
+  // Handlers
+  const setUserChoice = function(questionId, value) {
+    setQuestions(function(prevState) {
+      const newState = prevState.map((question, index) => {
+        if (questionId !== index) {
+          return question
+        }
+        return {...question, "userChoice": value};
+      })
 
+      return newState;
+    });
+  }
 
-  const questionComponents = props.questions.map((questionObject, index) => {
-    let {question, correct_answer, incorrect_answers} = questionObject;
-    let options = [correct_answer, ...incorrect_answers];
-    // const options = shuffleArray([correct_answer, ...incorrect_answers]);
-
+  // Components
+  const Questions = questions.map(function(question, id) {
     return (
       <Question 
-        key={index}
-        id={index}
-        question={question}
-        options={options}
-        handleClick={handleClick}
+        key={id} 
+        id={id}
+        questionObject={question} 
+        answerChecked={answerChecked}
+        clickHandler={setUserChoice}
       />
-    );
-  })
+    )
+  });
 
+  const ResultPanel = function(questionArray) { 
+    return (
+      <p className="result">
+        Getting {totalResult} out of {questionArray.length} questions
+      </p>
+    )
+  }
 
+  const CheckAnswerButton = Button({
+    onClickHandler: () => getTotalResult(questions),
+    buttonText: "Check Answers",
+  });
+
+  const RestartButton = Button({
+    onClickHandler: restartGame,
+    buttonText: "Play Again",
+  });
+  
+
+  
   return (
     <section className="question-page">
-      {questionComponents}
-      {
-        !answerChecked ?
-          <button onClick={() => checkAnswer(userAnswers, answers)} className="button">Check answers</button> :
-          <button className="button">Play Again</button>
-      }
-     
+      { Questions }
+      <div className="button-section">
+        { 
+          answerChecked ? 
+            ResultPanel(questions): 
+            "" 
+        }
+
+        {
+        !answerChecked ? 
+          CheckAnswerButton: 
+          RestartButton
+        }
+      </div>
     </section>
   )
 }
-
-// {questionComponents}

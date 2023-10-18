@@ -1,51 +1,72 @@
-import React from "react"
-import QuestionPage from "./QuestionPage"
+import React from "react";
+import QuestionPage from "./QuestionPage";
+import StartPage from "./StartPage";
 import {decode} from 'html-entities';
 
 export default function App() {
+  // States
   const [startQuiz, setStartQuiz] = React.useState(false);
-  const [questions, setQuestion] = React.useState([]);
+  const [restartQuiz, setRestartQuiz] = React.useState(0);
+  const [questions, setQuestions] = React.useState([]);
 
-  // get the api one time only
+  // Side effect
   React.useEffect(function() {
+    const shuffleArray = function(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
     const api = "https://opentdb.com/api.php?amount=10&category=32&difficulty=easy&type=multiple";
 
-    fetch(api)
-      .then(response => response.json())
-      .then(json => {
-        // clean up each result before add to the json itself
-        const results = json.results.map(result => {
-          return {
-            ...result,
-            "question": decode(result.question),
-            "correct_answer": decode(result.correct_answer),
-            "incorrect_answers": result.incorrect_answers.map(answer => decode(answer))
-          };
-        });
+    // Note: fetch and assigned the value to the questions
+    const fetchData = async function() {
+      const data = await fetch(api);
+      const {results} = await data.json();
 
-        return setQuestion(results)
-      });
-  }, [])
+      // decode the weird characters to user-friendly characters
+      const cleanResults = results.map(function(result) {
+        let decodedQuestion = decode(result.question);
+        let decodedIncorrectAnswers = result.incorrect_answers.map(answer => decode(answer));
+        let decodedCorrectAnswer = decode(result.correct_answer);
+        let shuffledOptions = shuffleArray([...decodedIncorrectAnswers, decodedCorrectAnswer]);
+
+        return {
+          question: decodedQuestion,
+          options: shuffledOptions,
+          correctAnswer: decodedCorrectAnswer,
+          userChoice: "",
+        };
+      })
+
+      setQuestions(cleanResults);
+    }
+
+    fetchData()
+      .catch(console.error);
+  }, [restartQuiz])
+
+  // Handlers
+  // startQuiz: boolean
+  const startQuizHandler = function(startQuiz) {
+    setStartQuiz(startQuiz);
+  }
+
+  const restartQuizHandler = function() {
+    setRestartQuiz((prevState) => prevState + 1)
+  }
 
   return (
     <div className="app-container">
-      {/* <div className="block block--one"></div>
-      <div className="block block--two"></div> */}
-
       {
         !startQuiz ? 
-        (
-          <section className="start-page">
-            <h1 className="start-page__title">Quizzical</h1>
-            <p className="start-page__subtitle">Let us see how many you got!</p>
-            <button className="button button--large" onClick={() => setStartQuiz(true)}>Start Quiz</button>
-          </section>
-        ):
-        <QuestionPage questions={questions} /> 
+          <StartPage 
+            startQuiz={startQuizHandler}
+          /> :
+          <QuestionPage 
+            questions={questions} 
+            setQuestions={setQuestions}
+            restartQuiz={restartQuizHandler}
+          />
       }
-      
-      {/* <Question /> */}
-
     </div>
   )
 }

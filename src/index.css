@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600;700&display=swap");
 
 :root {
-  --clr-primary-200: #d6dbf5;
+  --clr-primary-200: rgba(214, 219, 245, 1);
   --clr-primary-300: rgba(77, 91, 158, 1);
   --clr-primary-400: rgba(41, 50, 100, 1);
   --clr-neutral: rgba(245, 247, 251, 1);
@@ -66,7 +66,7 @@ h1 {
   background-color: var(--clr-primary-300);
   color: white;
   /* Others */
-  border: transparent;
+  border-color: transparent;
   border-radius: 15px;
 }
 
@@ -85,7 +85,7 @@ h1 {
   top: 0;
   right: 0;
   transform: translate(50%, -50%);
-  background-color: #FFFAD1;
+  background-color: #fffad1;
 }
 
 .block--two {
@@ -123,23 +123,23 @@ h1 {
 
 .question-container {
   color: var(--clr-primary-400);
-  padding-block: 1rem;
+  padding-block: 1.5rem;
   border-bottom: 1px solid var(--clr-primary-200);
 }
 
 .question {
   font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 12px;
+  margin-bottom: 1rem;
 }
 
-.answer-options {
+.options {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
 }
 
-.answer-options > button {
+.option {
   /* Layout */
   min-width: 4.0625rem;
   /* Spacing */
@@ -153,18 +153,44 @@ h1 {
   border-radius: 8px;
 }
 
-
-
-/* .answer-options > button + button {
-  margin-left: 13px;
-} */
-
-.answer-options > button.selected {
+.option:hover,
+.option:focus {
   background-color: var(--clr-primary-200);
-  border: 1px solid transparent;
+  border-color: transparent;
 }
 
-.question-page > .button {
-  margin-block-start: 1.25rem;
-  align-self: center;
+.option:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.option.selected {
+  background-color: var(--clr-primary-200);
+  border-color: transparent;
+  opacity: 1;
+}
+
+.option.correct {
+  background-color: #94d7a2;
+  color: var(--clr-primary-400);
+  border-color: transparent;
+  opacity: 1;
+}
+
+.option.incorrect {
+  background-color: #F8BCBC;
+}
+
+.result {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: rgba(41, 50, 100, 1);
+}
+
+.button-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-block-start: 1.75rem;
+  gap: 1.5rem;
 }
